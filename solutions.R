@@ -3,6 +3,7 @@
 
 library(tidyverse)
 library(ggforce)
+library(patchwork)
 theme_set(theme_void())
 
 
@@ -20,7 +21,10 @@ eqtri_df <- tibble(
 x0 = 0
 y0 = 0
 r = 1
-n = 50
+n = 100
+
+# Side of triangle
+l = sqrt(3)
 
 # Method A
 
@@ -39,7 +43,8 @@ MethodA_df <- tibble(
   x    = x1,
   y    = y1,
   xend = x2,
-  yend = y2
+  yend = y2,
+  chord = sqrt((xend - x)^2 + (yend - y)^2 )
 )
 
 # Plot
@@ -49,7 +54,14 @@ p1 <- ggplot() +
   geom_point(data = MethodA_df, aes(x = x1, y = y1), col = "lightpink2") +
   geom_point(data = MethodA_df, aes(x = x2, y = y2), col = "lightpink2") +
   geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightpink2") +
-  coord_equal()
+  coord_equal() +
+  labs(title = "Method A", subtitle = paste("Random Endpoints"))
+
+# Probability
+MethodA_count <- count(MethodA_df, chord > l)
+MethodA_prob = MethodA_count[2,2] / n
+
+
 
 # Method B
 angle_rd = 2*pi*runif(n)
@@ -81,7 +93,8 @@ p2 <- ggplot() +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_point(data = MethodB_df, aes(x = rx, y = ry), col = "plum") +
   geom_segment(data = MethodB_df, aes(x = x, y = y, xend = xend, yend = yend), col = "plum") +
-  coord_equal()
+  coord_equal() +
+  labs(title = "Method B", subtitle = paste("Random Radius"))
 
 
 # Method C
@@ -115,4 +128,7 @@ p3 <- ggplot() +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty), col = "lightblue") +
   geom_segment(data = MethodC_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightblue") +
-  coord_equal()
+  coord_equal() +
+  labs(title = "Method C", subtitle = paste("Random Midpoint"))
+
+p1 + p2 + p3 + plot_layout(nrow = 1)
