@@ -1,14 +1,9 @@
-# Instruction to students: You may clear the code in this file and replace it
-# with your own.
+## Group y+2x
 
 library(tidyverse)
 library(ggforce)
 library(patchwork)
 theme_set(theme_void())
-
-
-
-# Draw a random chord in a unit circle centred at origin -----------------------
 
 # Coordinates of equilateral triangle
 eqtri_df <- tibble(
@@ -24,10 +19,11 @@ y0 = 0
 r = 1
 n = 100
 
-# Side of triangle
-l = sqrt(3)
+# Length of side of triangle
+l = r*sqrt(3)
 
-# Method A
+
+# Method A ---------------------------------------------------------------------
 
 angle_ep1 = 2*pi*runif(n)
 angle_ep2 = 2*pi*runif(n)
@@ -63,8 +59,8 @@ MethodA_count <- count(MethodA_df, chord > l)
 MethodA_prob = MethodA_count[2,2] / n
 
 
+# Method B ---------------------------------------------------------------------
 
-# Method B
 angle_rd = 2*pi*runif(n)
 u = r*runif(n)
 v = sqrt(r^2 - u^2)
@@ -103,7 +99,8 @@ p2 <- ggplot() +
 MethodB_count <- count(MethodB_df, chord > l)
 MethodB_prob = MethodB_count[2,2] / n
 
-# Method C
+
+# Method C ---------------------------------------------------------------------
 
 angle_mdpt = 2*pi*runif(n)
 a = r*sqrt(runif(n))
@@ -126,9 +123,11 @@ MethodC_df <- tibble(
   x     = x5,
   y     = y5,
   xend  = x6,
-  yend  = y6
+  yend  = y6,
+  chord = sqrt((xend - x)^2 + (yend - y)^2 )
 )
 
+# Plot
 p3 <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
@@ -137,4 +136,18 @@ p3 <- ggplot() +
   coord_equal() +
   labs(title = "Method C", subtitle = paste("Random Midpoint"))
 
+# Probability
+MethodC_count <- count(MethodC_df, chord > l)
+MethodC_prob = MethodC_count[2,2] / n
+
+
+# Results ----------------------------------------------------------------------
 p1 + p2 + p3 + plot_layout(nrow = 1)
+
+all_prob <- tibble(
+  MethodA = MethodA_prob,
+  MethodB = MethodB_prob,
+  MethodC = MethodC_prob
+)
+
+print(all_prob)
