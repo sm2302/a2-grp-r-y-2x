@@ -7,6 +7,7 @@ library(patchwork)
 theme_set(theme_void())
 
 
+
 # Draw a random chord in a unit circle centred at origin -----------------------
 
 # Coordinates of equilateral triangle
@@ -72,7 +73,7 @@ v = sqrt(r^2 - u^2)
 x3 = u*cos(angle_rd) + v*sin(angle_rd)
 y3 = u*sin(angle_rd) - v*cos(angle_rd)
 
-x4 = v*sin(angle_rd) - u*cos(angle_rd)
+x4 = u*cos(angle_rd) - v*sin(angle_rd)
 y4 = u*sin(angle_rd) + v*cos(angle_rd)
 
 # Point on radius
@@ -85,9 +86,11 @@ MethodB_df <- tibble(
   x    = x3,
   y    = y3,
   xend = x4,
-  yend = y4
+  yend = y4,
+  chord = sqrt((xend - x)^2 + (yend - y)^2 )
 )
 
+# Plot
 p2 <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
@@ -96,6 +99,9 @@ p2 <- ggplot() +
   coord_equal() +
   labs(title = "Method B", subtitle = paste("Random Radius"))
 
+# Probability
+MethodB_count <- count(MethodB_df, chord > l)
+MethodB_prob = MethodB_count[2,2] / n
 
 # Method C
 
