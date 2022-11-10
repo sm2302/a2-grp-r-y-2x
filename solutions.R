@@ -102,9 +102,9 @@ MethodB_prob = MethodB_count[2,2] / n
 
 # Method C ---------------------------------------------------------------------
 
-angle_mdpt = 2*pi*runif(n)
-a = r*sqrt(runif(n))
-d = sqrt(r^2 - a^2)
+angle_mdpt = 2*pi*runif(n) # random uniform angle of midpoint
+a = r*sqrt(runif(n)) # random location of midpoint
+d = sqrt(r^2 - a^2) # half of chord length
 
 # Endpoint coordinates
 x5 = x0 + a*cos(angle_mdpt) + d*sin(angle_mdpt)
@@ -136,7 +136,7 @@ p3 <- ggplot() +
   coord_equal() +
   labs(title = "Method C", subtitle = paste("Random Midpoint"))
 
-# Probability
+# Probability of chord length longer than side of triangle
 MethodC_count <- count(MethodC_df, chord > l)
 MethodC_prob = MethodC_count[2,2] / n
 
