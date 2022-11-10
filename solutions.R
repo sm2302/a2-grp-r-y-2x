@@ -44,7 +44,9 @@ MethodA_df <- tibble(
 # Plot
 p1 <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
-  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) + 
+  geom_point(data = MethodA_df, aes(x = x1, y = y1)) +
+  geom_point(data = MethodA_df, aes(x = x2, y = y2)) +
   geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "red") +
   coord_equal()
 
