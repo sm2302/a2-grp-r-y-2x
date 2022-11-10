@@ -3,6 +3,7 @@
 
 library(tidyverse)
 library(ggforce)
+theme_set(theme_void())
 
 
 # Draw a random chord in a unit circle centred at origin -----------------------
@@ -19,7 +20,7 @@ eqtri_df <- tibble(
 x0 = 0
 y0 = 0
 r = 1
-n = 10
+n = 50
 
 # Method A
 
@@ -45,9 +46,41 @@ MethodA_df <- tibble(
 p1 <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) + 
-  geom_point(data = MethodA_df, aes(x = x1, y = y1)) +
-  geom_point(data = MethodA_df, aes(x = x2, y = y2)) +
-  geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "red") +
+  geom_point(data = MethodA_df, aes(x = x1, y = y1), col = "lightpink2") +
+  geom_point(data = MethodA_df, aes(x = x2, y = y2), col = "lightpink2") +
+  geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightpink2") +
+  coord_equal()
+
+# Method B
+angle_rd = 2*pi*runif(n)
+u = r*runif(n)
+v = sqrt(r^2 - u^2)
+
+# Endpoint coordinates
+x3 = u*cos(angle_rd) + v*sin(angle_rd)
+y3 = u*sin(angle_rd) - v*cos(angle_rd)
+
+x4 = v*sin(angle_rd) - u*cos(angle_rd)
+y4 = u*sin(angle_rd) + v*cos(angle_rd)
+
+# Point on radius
+rx = (x3 + x4) / 2
+ry = (y3 + y4) / 2
+
+MethodB_df <- tibble(
+  rx   = rx,
+  ry   = ry,
+  x    = x3,
+  y    = y3,
+  xend = x4,
+  yend = y4
+)
+
+p2 <- ggplot() +
+  ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
+  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_point(data = MethodB_df, aes(x = rx, y = ry), col = "plum") +
+  geom_segment(data = MethodB_df, aes(x = x, y = y, xend = xend, yend = yend), col = "plum") +
   coord_equal()
 
 
@@ -60,6 +93,7 @@ d = sqrt(r^2 - a^2)
 # Endpoint coordinates
 x5 = x0 + a*cos(angle_mdpt) + d*sin(angle_mdpt)
 y5 = x0 + a*sin(angle_mdpt) - d*cos(angle_mdpt)
+
 x6 = x0 + a*cos(angle_mdpt) - d*sin(angle_mdpt)
 y6 = x0 + a*sin(angle_mdpt) + d*cos(angle_mdpt)
 
@@ -70,15 +104,15 @@ mdpty = (y5 + y6) / 2
 MethodC_df <- tibble(
   mdptx = mdptx,
   mdpty = mdpty,
-  x    = x5,
-  y    = y5,
-  xend = x6,
-  yend = y6
+  x     = x5,
+  y     = y5,
+  xend  = x6,
+  yend  = y6
 )
 
 p3 <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty)) +
-  geom_segment(data = MethodC_df, aes(x = x, y = y, xend = xend, yend = yend), col = "blue") +
+  geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty), col = "lightblue") +
+  geom_segment(data = MethodC_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightblue") +
   coord_equal()
