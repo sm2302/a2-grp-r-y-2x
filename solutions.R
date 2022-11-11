@@ -17,7 +17,7 @@ eqtri_df <- tibble(
 x0 = 0
 y0 = 0
 r  = 1
-n  = 100
+n  = 50
 
 # Length of side of triangle
 l = r*sqrt(3)
@@ -56,8 +56,6 @@ p1a <- ggplot() +
 p1b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) + 
-  geom_point(data = MethodA_df, aes(x = x1, y = y1), col = "lightpink2") +
-  geom_point(data = MethodA_df, aes(x = x2, y = y2), col = "lightpink2") +
   geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightpink2") +
   coord_equal()
 
@@ -115,7 +113,6 @@ p2a <- ggplot() +
 p2b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_point(data = MethodB_df, aes(x = rx, y = ry), col = "plum") +
   geom_segment(data = MethodB_df, aes(x = x, y = y, xend = xend, yend = yend), col = "plum") +
   coord_equal()
 
@@ -164,7 +161,6 @@ p3a <- ggplot() +
 p3b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty), col = "lightblue") +
   geom_segment(data = MethodC_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightblue") +
   coord_equal()
 
