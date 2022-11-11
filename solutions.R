@@ -16,8 +16,8 @@ eqtri_df <- tibble(
 # Coordinates of random chord
 x0 = 0
 y0 = 0
-r = 1
-n = 100
+r  = 1
+n  = 100
 
 # Length of side of triangle
 l = r*sqrt(3)
@@ -25,8 +25,8 @@ l = r*sqrt(3)
 
 # Method A ---------------------------------------------------------------------
 
-angle_ep1 = 2*pi*runif(n)
-angle_ep2 = 2*pi*runif(n)
+angle_ep1 = 2*pi*runif(n) # random uniform angle of endpoint 1
+angle_ep2 = 2*pi*runif(n) # random uniform angle of endpoint 1
 
 # Endpoint coordinates
 x1 = x0 + r*cos(angle_ep1)
@@ -37,33 +37,42 @@ y2 = y0 + r*sin(angle_ep2)
 
 
 MethodA_df <- tibble(
-  x    = x1,
-  y    = y1,
-  xend = x2,
-  yend = y2,
+  x     = x1,
+  y     = y1,
+  xend  = x2,
+  yend  = y2,
   chord = sqrt((xend - x)^2 + (yend - y)^2 )
 )
 
 # Plot
-p1 <- ggplot() +
+p1a <- ggplot() +
+  ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
+  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) + 
+  geom_point(data = MethodA_df, aes(x = x1, y = y1), col = "lightpink2") +
+  geom_point(data = MethodA_df, aes(x = x2, y = y2), col = "lightpink2") +
+  coord_equal() +
+  labs(title = "Method A", subtitle = paste("Random Endpoints"))
+
+p1b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) + 
   geom_point(data = MethodA_df, aes(x = x1, y = y1), col = "lightpink2") +
   geom_point(data = MethodA_df, aes(x = x2, y = y2), col = "lightpink2") +
   geom_segment(data = MethodA_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightpink2") +
-  coord_equal() +
-  labs(title = "Method A", subtitle = paste("Random Endpoints"))
+  coord_equal()
 
-# Probability
+p1a + p1b + plot_layout(nrow = 1)
+
+# Probability of chord length longer than side of triangle
 MethodA_count <- count(MethodA_df, chord > l)
 MethodA_prob = MethodA_count[2,2] / n
 
 
 # Method B ---------------------------------------------------------------------
 
-angle_rd = 2*pi*runif(n)
-u = r*runif(n)
-v = sqrt(r^2 - u^2)
+angle_rd = 2*pi*runif(n) # random uniform angle of radius
+u        = r*runif(n) # random uniform location of point on radius
+v        = sqrt(r^2 - u^2) # half of chord length
 
 # Endpoint coordinates
 x3 = u*cos(angle_rd) + v*sin(angle_rd)
@@ -76,26 +85,43 @@ y4 = u*sin(angle_rd) + v*cos(angle_rd)
 rx = (x3 + x4) / 2
 ry = (y3 + y4) / 2
 
+# Radius endpoint coordinates
+rxend = r*cos(angle_rd)
+ryend = r*sin(angle_rd)
+
 MethodB_df <- tibble(
-  rx   = rx,
-  ry   = ry,
-  x    = x3,
-  y    = y3,
-  xend = x4,
-  yend = y4,
+  rx    = rx,
+  ry    = ry,
+  x     = x3,
+  y     = y3,
+  xend  = x4,
+  yend  = y4,
+  x0    = 0,
+  y0    = 0,
+  rxend = rxend,
+  ryend = ryend,
   chord = sqrt((xend - x)^2 + (yend - y)^2 )
 )
 
 # Plot
-p2 <- ggplot() +
+p2a <- ggplot() +
+  ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
+  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_segment(data = MethodB_df, aes(x = x0, y = y0, xend = rxend, yend = ryend), col = "plum") +
+  geom_point(data = MethodB_df, aes(x = rx, y = ry), col = "plum") +
+  coord_equal() +
+  labs(title = "Method B", subtitle = paste("Random Radius"))
+
+p2b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_point(data = MethodB_df, aes(x = rx, y = ry), col = "plum") +
   geom_segment(data = MethodB_df, aes(x = x, y = y, xend = xend, yend = yend), col = "plum") +
-  coord_equal() +
-  labs(title = "Method B", subtitle = paste("Random Radius"))
+  coord_equal()
 
-# Probability
+p2a + p2b + plot_layout(nrow = 1)
+
+# Probability of chord length longer than side of triangle
 MethodB_count <- count(MethodB_df, chord > l)
 MethodB_prob = MethodB_count[2,2] / n
 
@@ -103,8 +129,8 @@ MethodB_prob = MethodB_count[2,2] / n
 # Method C ---------------------------------------------------------------------
 
 angle_mdpt = 2*pi*runif(n) # random uniform angle of midpoint
-a = r*sqrt(runif(n)) # random location of midpoint
-d = sqrt(r^2 - a^2) # half of chord length
+a          = r*sqrt(runif(n)) # random location of midpoint
+d          = sqrt(r^2 - a^2) # half of chord length
 
 # Endpoint coordinates
 x5 = x0 + a*cos(angle_mdpt) + d*sin(angle_mdpt)
@@ -128,13 +154,21 @@ MethodC_df <- tibble(
 )
 
 # Plot
-p3 <- ggplot() +
+p3a <- ggplot() +
+  ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
+  geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty), col = "lightblue") +
+  coord_equal() +
+  labs(title = "Method C", subtitle = paste("Random Midpoint"))
+
+p3b <- ggplot() +
   ggforce::geom_circle(aes(x0 = 0, y0 = 0, r = 1), col = "gray50") +
   geom_segment(data = eqtri_df, aes(x = x, y = y, xend = xend, yend = yend)) +
   geom_point(data = MethodC_df, aes(x = mdptx, y = mdpty), col = "lightblue") +
   geom_segment(data = MethodC_df, aes(x = x, y = y, xend = xend, yend = yend), col = "lightblue") +
-  coord_equal() +
-  labs(title = "Method C", subtitle = paste("Random Midpoint"))
+  coord_equal()
+
+p3a + p3b + plot_layout(nrow = 1)
 
 # Probability of chord length longer than side of triangle
 MethodC_count <- count(MethodC_df, chord > l)
@@ -142,7 +176,8 @@ MethodC_prob = MethodC_count[2,2] / n
 
 
 # Results ----------------------------------------------------------------------
-p1 + p2 + p3 + plot_layout(nrow = 1)
+
+p1a + p1b + p2a + p2b + p3a + p3b + plot_layout(nrow = 3)
 
 all_prob <- tibble(
   MethodA = MethodA_prob,
