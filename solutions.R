@@ -13,14 +13,13 @@ eqtri_df <- tibble(
   yend = c(-0.5, -0.5, 1)
 )
 
-# Coordinates of random chord
-x0 = 0
-y0 = 0
-r  = 1
-n  = 50
+# Input
+x0 = 0 # x-coordinate of center
+y0 = 0 # y-coordinate of center
+r  = 1 # length of radius
+n  = 50 # number of chords
+l = r*sqrt(3) # length of side of triangle
 
-# Length of side of triangle
-l = r*sqrt(3)
 
 
 # Method A ---------------------------------------------------------------------
