@@ -3,3 +3,6 @@ plugins:
 - jekyll-remote-theme
 
 title: [Betrand Paradox]
+description: [Consider an equilateral triangle inscribe in a circle.
+Suppose a chord of the circle is chosen at random.
+What is the probability that the chord is longer than a side of the triangle?]
