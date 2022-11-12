@@ -15,7 +15,7 @@ Three different solutions are presented, each depending on the method of generat
 - **METHOD C (Random Midpoints)**: Choose a point anywhere within the circle, and construct the chord such that the point chosen is the midpoint of the chord.
 
 ## Simulation
-By running our R script labelled `solutions.R`, you will see 6 plots in total, two for each method. The plots on the left will show the randomly generated points whereas the plots on the right will show the corresponding chords. A tibble of the probablity for each respective method will also be printed out. Feel free to change the number of chords to see different outcomes. Below you will find the explanation of how we generated the random points.
+By running our R script labelled `solutions.R`, you will see 6 plots in total, two for each method. The plots on the left will show the randomly generated points whereas the plots on the right will show the corresponding chords. A tibble of the probablity for each respective method will also be printed out. Feel free to change the number of chords to see different outcomes. Below you will find a brief explanation of how we generated the random points.
 
 ### METHOD A (Random Endpoints)
 To obtain the random endpoints, we first generate random uniform angles (where the endpoints will be). Next, we calculate the corresponding endpoint coordinates as below:
